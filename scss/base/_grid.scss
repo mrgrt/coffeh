@@ -1,0 +1,161 @@
+$xs: 320px;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xlg: 1200px;
+
+$sizes: (xs: $xs, sm: $sm, md: $md, lg: $lg, xlg: $xlg);
+$colsets: 12, 16;
+
+$container-width: 1200px;
+
+*{
+  box-sizing: border-box; 
+}
+
+%clearfix{
+
+  &::after{
+    content:"";
+    display: table;
+    clear:both;
+  }
+
+}
+
+.clearfix{
+
+  @extend %clearfix;
+  
+}
+
+.container{
+
+  @extend %clearfix;
+  width: 100%;
+  max-width: $container-width;
+  margin: 0 auto;
+  
+}
+
+
+.row{
+  @extend %clearfix;
+}
+
+.col{
+  float: left;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 100%;
+  
+  &--group{
+    padding: 0; 
+  }
+
+}
+
+@mixin generate-columns($cols, $size: null){
+  
+  @if($size){
+    $size: "--#{$size}";
+  }
+  
+  @for $col from 0 through $cols{
+    
+    .col--#{$col}of#{$cols}#{$size}{
+      width: 100% / $cols * $col;
+    }
+
+    .col--offset--#{$col}of#{$cols}#{$size}{
+       margin-left: 100% / $cols * $col;
+    }
+
+  }  
+}
+
+@each $cols in $colsets {
+
+  @include generate-columns($cols);
+  
+  @each $size, $breakpoint in $sizes {
+    @media screen and (min-width: $breakpoint){
+      @include generate-columns($cols, $size);
+    }
+  }
+}
+
+  @for $i from 0 through 6{
+    
+    .margin--below--#{$i}{
+      margin-bottom: $i * 12px;
+    } 
+
+    .margin--above--#{$i}{
+      margin-top: $i * 12px;
+    } 
+
+    .padding--below--#{$i}{
+      padding-bottom: $i * 12px;
+    } 
+
+    .padding--above--#{$i}{
+      padding-top: $i * 12px;
+    } 
+
+  }
+
+@each $size, $breakpoint in $sizes {
+
+
+  @media screen and (min-width: $breakpoint){
+
+    @for $i from 0 through 6{
+      
+      .margin--below--#{$i}--#{$size}{
+          margin-bottom: $i * 12px;
+      } 
+
+      .margin--above--#{$i}--#{$size}{
+          margin-top: $i * 12px;
+      }
+
+      .padding--below--#{$i}--#{$size}{
+          padding-bottom: $i * 12px;
+      } 
+
+      .padding--above--#{$i}--#{$size}{
+          padding-top: $i * 12px;
+      } 
+ 
+
+    }
+
+  }
+}
+
+ 
+
+@each $size, $breakpoint in $sizes {
+  
+  .#{$size}_up{
+    display: none;
+  }
+
+  @media screen and (min-width: $breakpoint){
+    .#{$size}_down{
+      display: none;
+    }
+    
+    .#{$size}_up{
+      display: inline;
+    }
+    
+  }
+
+}
+
+.pull_right{
+  float: right !important;
+}
